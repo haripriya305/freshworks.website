@@ -52,15 +52,17 @@ app.use('/api', (req, res) => {
   });
 });
 
-// Serve frontend locally
-if (!process.env.VERCEL) {
-  app.use(express.static(path.join(__dirname, '../frontend')));
+// Serve frontend locally and on Vercel
+const frontendDir = process.env.VERCEL
+  ? path.join(__dirname, '../public')
+  : path.join(__dirname, '../frontend');
 
-  // Homepage route
-  app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, '../frontend/index.html'));
-  });
-}
+app.use(express.static(frontendDir));
+
+// Homepage route
+app.get('/', (req, res) => {
+  res.sendFile(path.join(frontendDir, 'index.html'));
+});
 
 // Error handling
 app.use((err, req, res, next) => {
