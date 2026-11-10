@@ -1,2 +1,5 @@
-// Vercel entry point: export the Express application.
-module.exports = require('./backend/app');
+
+const express = require('express');
+const app = require('./backend/app');
+
+module.exports = app;
