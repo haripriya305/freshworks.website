@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Features — FreshWorks</title>
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+<header id="site-nav"></header>
+
+<section class="hero" style="padding-bottom:0;">
+  <div class="container text-center">
+    <div class="eyebrow" style="justify-content:center;">Product</div>
+    <h1 style="max-width:760px;margin:0 auto;">Every tool your support team actually opens daily</h1>
+    <p class="lead" style="margin:14px auto 0;">No bloat, no modules you'll never touch — just the parts that move tickets toward "resolved."</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="grid-3" id="features-list"></div>
+  </div>
+</section>
+
+<section class="section section-alt">
+  <div class="container grid-2">
+    <div>
+      <div class="eyebrow">Under the hood</div>
+      <h2>Built on a REST API you can extend</h2>
+      <p>Every action in the dashboard — creating tickets, updating roles, posting articles — runs through the same documented API your own integrations can call.</p>
+      <ul style="list-style:none;display:grid;gap:10px;margin-top:18px;">
+        <li>✅ JWT-based authentication</li>
+        <li>✅ Role-based access (agent, admin)</li>
+        <li>✅ Webhooks for ticket events</li>
+        <li>✅ MySQL-backed persistence</li>
+      </ul>
+    </div>
+    <div class="card" style="font-family:var(--font-mono);font-size:.85rem;background:var(--ink);color:#D6F5E6;padding:24px;border-radius:var(--radius-md);">
+      <pre style="margin:0;white-space:pre-wrap;">POST /api/auth/login
+{
+  "email": "agent@team.com",
+  "password": "••••••••"
+}
+
+→ 200 OK
+{ "token": "eyJhbGciOi...", "user": {...} }</pre>
+    </div>
+  </div>
+</section>
+
+<footer id="site-footer"></footer>
+<script src="data/content.js"></script>
+<script src="js/main.js"></script>
+<script>
+  document.getElementById('features-list').innerHTML = SITE_DATA.features.map(f => `
+    <div class="card">
+      <div style="font-size:1.8rem;margin-bottom:10px;">${f.icon}</div>
+      <h3>${f.title}</h3>
+      <p>${f.desc}</p>
+      <p class="muted" style="font-size:.86rem;">${f.detail}</p>
+    </div>`).join('');
+</script>
+</body>
+</html>

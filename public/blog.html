@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blog & Docs — FreshWorks</title>
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+<header id="site-nav"></header>
+
+<section class="hero" style="padding-bottom:0;">
+  <div class="container text-center">
+    <div class="eyebrow" style="justify-content:center;">Blog & documentation</div>
+    <h1>Notes on support, written by people who do it</h1>
+    <p class="lead" style="margin:14px auto 0;">Strategy, product deep-dives, and the occasional opinion piece.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="grid-3" id="blog-list"></div>
+  </div>
+</section>
+
+<footer id="site-footer"></footer>
+<script src="data/content.js"></script>
+<script src="js/main.js"></script>
+<script src="js/api.js"></script>
+<script>
+  function fallbackRender(posts){
+    document.getElementById('blog-list').innerHTML = posts.map(p => `
+      <a href="post.html?slug=${p.slug}" class="card blog-card">
+        <img src="https://via.placeholder.com/480x270/0D6E5C/ffffff?text=${encodeURIComponent(p.tag)}" alt="${p.title}">
+        <div class="blog-meta">${p.tag} · ${new Date(p.date).toLocaleDateString()}</div>
+        <h3>${p.title}</h3>
+        <p>${p.excerpt}</p>
+      </a>`).join('');
+  }
+  // Try the live API first, fall back to local SITE_DATA so the page works without a backend running
+  Api.getPosts().then(res => fallbackRender(res.posts || res)).catch(() => fallbackRender(SITE_DATA.blog));
+</script>
+</body>
+</html>

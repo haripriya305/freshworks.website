@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pricing — FreshWorks</title>
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+<header id="site-nav"></header>
+
+<section class="hero" style="padding-bottom:0;">
+  <div class="container text-center">
+    <div class="eyebrow" style="justify-content:center;">Pricing</div>
+    <h1>Plans that grow with your queue</h1>
+    <p class="lead" style="margin:14px auto 0;">Start free for 14 days. No card required. Cancel anytime.</p>
+    <div class="toggle-row">
+      <span id="label-monthly" style="font-weight:600;">Monthly</span>
+      <div class="switch" id="billing-switch"></div>
+      <span id="label-yearly" class="muted">Yearly <span class="badge-pill green">Save 20%</span></span>
+    </div>
+  </div>
+</section>
+
+<section class="section" style="padding-top:0;">
+  <div class="container">
+    <div class="grid-3" id="pricing-cards"></div>
+  </div>
+</section>
+
+<section class="section section-alt">
+  <div class="container" style="max-width:760px;">
+    <div class="eyebrow">FAQ</div>
+    <h2>Common questions</h2>
+    <div id="faq-list" style="margin-top:20px;"></div>
+  </div>
+</section>
+
+<footer id="site-footer"></footer>
+<script src="data/content.js"></script>
+<script src="js/main.js"></script>
+<script>
+  let yearly = false;
+
+  function renderPricing(){
+    const p = SITE_DATA.pricing;
+    document.getElementById('pricing-cards').innerHTML = p.plans.map(plan => {
+      const price = yearly ? plan.yearly : plan.monthly;
+      return `
+      <div class="card price-card ${plan.featured ? 'featured' : ''}">
+        ${plan.badge ? `<span class="badge">${plan.badge}</span>` : ''}
+        <h3>${plan.name}</h3>
+        <p class="muted">${plan.tagline}</p>
+        <div class="price-amount">$${price}<span>/mo</span></div>
+        <p class="muted" style="font-size:.82rem;">${yearly ? p.yearlyNote : p.monthlyNote}</p>
+        <ul class="price-features">
+          ${plan.features.map(f => `<li>✅ ${f}</li>`).join('')}
+        </ul>
+        <a href="register.html" class="btn ${plan.featured ? 'btn-primary' : 'btn-outline'} btn-block">Start free trial</a>
+      </div>`;
+    }).join('');
+  }
+
+  document.getElementById('billing-switch').addEventListener('click', (e) => {
+    yearly = !yearly;
+    e.target.classList.toggle('on', yearly);
+    document.getElementById('label-monthly').style.fontWeight = yearly ? '400' : '600';
+    document.getElementById('label-yearly').style.fontWeight = yearly ? '600' : '400';
+    renderPricing();
+  });
+
+  renderPricing();
+
+  document.getElementById('faq-list').innerHTML = SITE_DATA.faq.map(item => `
+    <div class="card" style="margin-bottom:12px;">
+      <h3 style="font-size:1.02rem;">${item.q}</h3>
+      <p style="margin-bottom:0;">${item.a}</p>
+    </div>`).join('');
+</script>
+</body>
+</html>

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Start free trial — FreshWorks</title>
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+<header id="site-nav"></header>
+<section class="section">
+  <div class="container" style="max-width:440px;">
+    <div class="card">
+      <h2 class="text-center" style="margin-top:0;">Start your free trial</h2>
+      <p class="muted text-center">14 days free. No credit card needed.</p>
+      <div class="form-msg" id="form-msg"></div>
+      <form id="reg-form">
+        <div class="form-group"><label for="name">Full name</label>
+          <input class="form-control" type="text" id="name" required autocomplete="name"></div>
+        <div class="form-group"><label for="email">Work email</label>
+          <input class="form-control" type="email" id="email" required autocomplete="email"></div>
+        <div class="form-group"><label for="password">Password (min 6 characters)</label>
+          <input class="form-control" type="password" id="password" minlength="6" required autocomplete="new-password"></div>
+        <button class="btn btn-primary btn-block" type="submit" id="reg-btn">Create account</button>
+      </form>
+      <p class="muted text-center" style="margin-top:16px;font-size:.9rem;">Already have an account? <a href="login.html" style="color:var(--primary);font-weight:600;">Log in</a></p>
+    </div>
+  </div>
+</section>
+<footer id="site-footer"></footer>
+<script src="data/content.js"></script>
+<script src="js/main.js"></script>
+<script src="js/api.js"></script>
+<script>
+  const form = document.getElementById('reg-form'), box = document.getElementById('form-msg'), btn = document.getElementById('reg-btn');
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    btn.disabled = true; btn.textContent = 'Creating account...'; box.className = 'form-msg';
+    try {
+      const data = await Api.register({ name: form.name.value, email: form.email.value, password: form.password.value });
+      localStorage.setItem('fw_token', data.token);
+      localStorage.setItem('fw_user', JSON.stringify(data.user));
+      box.className = 'form-msg success'; box.textContent = 'Account created! Redirecting...';
+      setTimeout(() => window.location.href = 'dashboard.html', 700);
+    } catch (err) {
+      box.className = 'form-msg error'; box.textContent = err.message;
+      btn.disabled = false; btn.textContent = 'Create account';
+    }
+  });
+</script>
+</body>
+</html>

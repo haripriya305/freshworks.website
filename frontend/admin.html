@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin — FreshWorks</title>
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+<header id="site-nav"></header>
+<section class="section">
+  <div class="container">
+    <div class="eyebrow">Admin</div>
+    <h1 style="margin-top:8px;">Admin panel</h1>
+    <div class="form-msg" id="form-msg"></div>
+    <div class="card" style="margin:24px 0;">
+      <h3 style="margin-top:0;">Users</h3>
+      <div style="overflow-x:auto;"><table style="width:100%;border-collapse:collapse;font-size:.92rem;">
+        <thead><tr style="text-align:left;color:var(--ink-muted);"><th style="padding:8px;">Name</th><th>Email</th><th>Role</th><th></th></tr></thead>
+        <tbody id="users"></tbody></table></div>
+    </div>
+    <div class="card">
+      <h3 style="margin-top:0;">Contact messages</h3>
+      <div id="messages" class="muted">Loading...</div>
+    </div>
+  </div>
+</section>
+<footer id="site-footer"></footer>
+<script src="data/content.js"></script>
+<script src="js/main.js"></script>
+<script src="js/api.js"></script>
+<script>
+  const box = document.getElementById('form-msg');
+  const me = JSON.parse(localStorage.getItem('fw_user') || 'null');
+  if (!localStorage.getItem('fw_token')) window.location.href = 'login.html';
+  const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  async function load() {
+    try {
+      const [u, m] = await Promise.all([Api.getUsers(), Api.getContactMessages()]);
+      document.getElementById('users').innerHTML = u.users.map(x =>
+        '<tr style="border-top:1px solid var(--border);"><td style="padding:10px 8px;">'+esc(x.name)+'</td><td>'+esc(x.email)+'</td><td>'+esc(x.role)+'</td><td>' +
+        (me && me.id === x.id ? '' :
+          '<button class="btn btn-outline btn-sm" data-role="'+x.id+'" data-to="'+(x.role==='admin'?'agent':'admin')+'">Make '+(x.role==='admin'?'agent':'admin')+'</button> ' +
+          '<button class="btn btn-outline btn-sm" data-del="'+x.id+'">Delete</button>') + '</td></tr>').join('');
+      document.getElementById('messages').innerHTML = m.messages.length ? m.messages.map(x =>
+        '<div style="border-top:1px solid var(--border);padding:12px 0;"><b>'+esc(x.subject)+'</b> <span class="muted">— '+esc(x.name)+' ('+esc(x.email)+')</span><p style="margin:6px 0 0;">'+esc(x.message)+'</p></div>').join('') : 'No messages yet.';
+    } catch (err) {
+      box.className = 'form-msg error';
+      box.textContent = /admin/i.test(err.message) ? 'Admin access required. Log in with an admin account (admin@freshworks-demo.com / Admin@123).' : err.message;
+    }
+  }
+  document.addEventListener('click', async (e) => {
+    try {
+      if (e.target.dataset.role) { await Api.updateUserRole(e.target.dataset.role, e.target.dataset.to); load(); }
+      if (e.target.dataset.del && confirm('Delete this user?')) { await Api.deleteUser(e.target.dataset.del); load(); }
+    } catch (err) { box.className = 'form-msg error'; box.textContent = err.message; }
+  });
+  load();
+</script>
+</body>
+</html>

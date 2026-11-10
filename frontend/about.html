@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>About — FreshWorks</title>
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+<header id="site-nav"></header>
+
+<section class="hero" style="padding-bottom:0;">
+  <div class="container">
+    <div class="eyebrow">About us</div>
+    <h1 style="max-width:680px;">Built by a support team that got tired of switching tabs</h1>
+    <p class="lead" id="about-story" style="margin-top:14px;"></p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container grid-2">
+    <div class="card">
+      <h3>Our mission</h3>
+      <p id="about-mission" style="margin-bottom:0;"></p>
+    </div>
+    <div class="card">
+      <h3>Where we're based</h3>
+      <p style="margin-bottom:0;">Headquartered in Tamil Nadu, India, with a fully remote support and engineering team across three time zones.</p>
+    </div>
+  </div>
+</section>
+
+<section class="section section-alt">
+  <div class="container">
+    <div class="eyebrow">What we believe</div>
+    <h2>Our values</h2>
+    <div class="grid-3" id="about-values" style="margin-top:28px;"></div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="eyebrow">The team</div>
+    <h2>Small team, big inbox energy</h2>
+    <div class="grid-3" id="about-team" style="margin-top:28px;"></div>
+  </div>
+</section>
+
+<footer id="site-footer"></footer>
+<script src="data/content.js"></script>
+<script src="js/main.js"></script>
+<script>
+  const a = SITE_DATA.about;
+  document.getElementById('about-story').textContent = a.story;
+  document.getElementById('about-mission').textContent = a.mission;
+  document.getElementById('about-values').innerHTML = a.values.map(v => `
+    <div class="card"><h3>${v.title}</h3><p style="margin-bottom:0;">${v.desc}</p></div>`).join('');
+  document.getElementById('about-team').innerHTML = a.team.map(m => `
+    <div class="card text-center">
+      <div style="width:64px;height:64px;border-radius:50%;background:var(--surface-2);margin:0 auto 14px;display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-weight:700;color:var(--primary);">${m.name.charAt(0)}</div>
+      <h3 style="font-size:1.05rem;">${m.name}</h3>
+      <p class="muted" style="margin-bottom:0;">${m.role}</p>
+    </div>`).join('');
+</script>
+</body>
+</html>

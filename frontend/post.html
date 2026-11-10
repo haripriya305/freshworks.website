@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Article — FreshWorks Blog</title>
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+<header id="site-nav"></header>
+<section class="section" style="padding-top:48px;">
+  <div class="container" style="max-width:720px;">
+    <a href="blog.html" class="muted" style="font-size:.9rem;">← Back to blog</a>
+    <div id="post-content" style="margin-top:18px;"></div>
+  </div>
+</section>
+<footer id="site-footer"></footer>
+<script src="data/content.js"></script>
+<script src="js/main.js"></script>
+<script src="js/api.js"></script>
+<script>
+  const slug = new URLSearchParams(window.location.search).get('slug');
+  function render(p){
+    document.title = p.title + ' — FreshWorks Blog';
+    document.getElementById('post-content').innerHTML = `
+      <div class="blog-meta">${p.tag} · ${new Date(p.date).toLocaleDateString()} · ${p.author}</div>
+      <h1>${p.title}</h1>
+      <p style="font-size:1.05rem;">${p.excerpt}</p>
+      <p>This article is part of FreshWorks' ongoing series on running calmer support teams. Connect the backend (see /backend) to serve full article bodies stored in MongoDB.</p>`;
+  }
+  Api.getPost(slug).then(res => render(res.post || res)).catch(() => {
+    const p = SITE_DATA.blog.find(x => x.slug === slug) || SITE_DATA.blog[0];
+    render(p);
+  });
+</script>
+</body>
+</html>

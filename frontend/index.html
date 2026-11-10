@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FreshWorks — Customer support software that feels effortless</title>
+<meta name="description" content="FreshWorks unifies tickets, chat, and knowledge base into one calm inbox.">
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+<header id="site-nav"></header>
+
+<section class="hero">
+  <div class="container">
+    <div class="grid-2">
+      <div>
+        <div class="hero-badge" id="hero-badge"></div>
+        <h1 id="hero-heading"></h1>
+        <p class="lead" id="hero-lead"></p>
+        <div class="hero-cta">
+          <a href="register.html" class="btn btn-primary">Start free trial</a>
+          <a href="features.html" class="btn btn-outline">See features</a>
+        </div>
+        <div class="hero-stats" id="hero-stats"></div>
+      </div>
+      <div class="card" style="padding:0;overflow:hidden;">
+        <div style="background:var(--surface-2);padding:18px;display:flex;gap:8px;border-bottom:1px solid var(--border);">
+          <span style="width:10px;height:10px;border-radius:50%;background:#E8633D;"></span>
+          <span style="width:10px;height:10px;border-radius:50%;background:#E3B341;"></span>
+          <span style="width:10px;height:10px;border-radius:50%;background:#1E8E5A;"></span>
+          <span style="margin-left:8px;font-family:var(--font-mono);font-size:.8rem;color:var(--ink-muted);">inbox — unified</span>
+        </div>
+        <div style="padding:20px;">
+          <div style="display:flex;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--border);">
+            <strong>Reema K.</strong><span class="badge-pill green">Resolved</span>
+          </div>
+          <p class="muted" style="margin:8px 0 18px;font-size:.88rem;">"The refund cleared right away — thanks for sorting that out fast!"</p>
+          <div style="display:flex;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--border);">
+            <strong>Vikram S.</strong><span class="badge-pill gray">AI drafted</span>
+          </div>
+          <p class="muted" style="margin:8px 0 18px;font-size:.88rem;">"Following up on ticket #4471 about the API rate limit increase."</p>
+          <div style="display:flex;justify-content:space-between;padding:12px 0;">
+            <strong>Anita D.</strong><span class="badge-pill red">SLA: 2h left</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="eyebrow">Why teams switch</div>
+    <h2>Everything support needs, nothing it doesn't</h2>
+    <div class="grid-3" id="home-features" style="margin-top:32px;"></div>
+  </div>
+</section>
+
+<section class="section section-alt">
+  <div class="container">
+    <div class="eyebrow">Trusted by support teams</div>
+    <h2>Loved by the people answering the tickets</h2>
+    <div class="grid-3" id="home-testimonials" style="margin-top:32px;"></div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container card text-center" style="padding:56px;">
+    <h2>Ready to calm down your inbox?</h2>
+    <p>14-day free trial. No credit card required.</p>
+    <div class="hero-cta" style="justify-content:center;">
+      <a href="register.html" class="btn btn-primary">Start free trial</a>
+      <a href="contact.html" class="btn btn-outline">Talk to sales</a>
+    </div>
+  </div>
+</section>
+
+<footer id="site-footer"></footer>
+
+<script src="data/content.js"></script>
+<script src="js/main.js"></script>
+<script>
+  document.getElementById('hero-badge').textContent = '✨ ' + SITE_DATA.hero.badge;
+  document.getElementById('hero-heading').textContent = SITE_DATA.hero.heading;
+  document.getElementById('hero-lead').textContent = SITE_DATA.hero.lead;
+  document.getElementById('hero-stats').innerHTML = SITE_DATA.hero.stats.map(s =>
+    `<div class="hero-stat"><b>${s.value}</b><span>${s.label}</span></div>`).join('');
+
+  document.getElementById('home-features').innerHTML = SITE_DATA.features.slice(0,6).map(f => `
+    <div class="card">
+      <div style="font-size:1.8rem;margin-bottom:10px;">${f.icon}</div>
+      <h3>${f.title}</h3>
+      <p>${f.desc}</p>
+    </div>`).join('');
+
+  document.getElementById('home-testimonials').innerHTML = SITE_DATA.testimonials.map(t => `
+    <div class="card">
+      <p style="font-size:1.02rem;color:var(--ink);">"${t.quote}"</p>
+      <strong>${t.name}</strong><br><span class="muted" style="font-size:.85rem;">${t.role}</span>
+    </div>`).join('');
+</script>
+</body>
+</html>

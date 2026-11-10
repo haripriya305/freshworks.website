@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard — FreshWorks</title>
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+<header id="site-nav"></header>
+<section class="section">
+  <div class="container">
+    <div class="eyebrow">Dashboard</div>
+    <h1 id="hello" style="margin-top:8px;">Dashboard</h1>
+    <div class="form-msg" id="form-msg"></div>
+    <div class="stat-grid" style="margin-top:24px;">
+      <div class="stat-card"><div class="val" id="s-open">–</div><div class="lbl">Open tickets</div></div>
+      <div class="stat-card"><div class="val" id="s-resolved">–</div><div class="lbl">Resolved</div></div>
+      <div class="stat-card"><div class="val" id="s-resp">–</div><div class="lbl">Avg. response</div></div>
+      <div class="stat-card"><div class="val" id="s-csat">–</div><div class="lbl">CSAT</div></div>
+    </div>
+    <div class="card" style="margin-bottom:24px;">
+      <h3 style="margin-top:0;">Tickets this week</h3>
+      <svg id="chart" viewBox="0 0 560 180" style="width:100%;height:auto;"></svg>
+    </div>
+    <div class="card">
+      <h3 style="margin-top:0;">Recent tickets</h3>
+      <div style="overflow-x:auto;"><table style="width:100%;border-collapse:collapse;font-size:.92rem;">
+        <thead><tr style="text-align:left;color:var(--ink-muted);"><th style="padding:8px;">Customer</th><th>Subject</th><th>Channel</th><th>Status</th></tr></thead>
+        <tbody id="tickets"></tbody></table></div>
+    </div>
+  </div>
+</section>
+<footer id="site-footer"></footer>
+<script src="data/content.js"></script>
+<script src="js/main.js"></script>
+<script src="js/api.js"></script>
+<script>
+  const box = document.getElementById('form-msg');
+  const user = JSON.parse(localStorage.getItem('fw_user') || 'null');
+  if (!localStorage.getItem('fw_token')) window.location.href = 'login.html';
+  if (user) document.getElementById('hello').textContent = 'Hi, ' + user.name.split(' ')[0] + ' 👋';
+  const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  (async () => {
+    try {
+      const [sum, t] = await Promise.all([Api.getAnalyticsSummary(), Api.getTickets()]);
+      document.getElementById('s-open').textContent = sum.openTickets;
+      document.getElementById('s-resolved').textContent = sum.resolved;
+      document.getElementById('s-resp').textContent = sum.avgResponse;
+      document.getElementById('s-csat').textContent = sum.csat;
+      const max = Math.max(...sum.series.map(s => s.value));
+      document.getElementById('chart').innerHTML = sum.series.map((s, i) => {
+        const h = (s.value / max) * 130, x = 20 + i * 76;
+        return '<rect x="'+x+'" y="'+(150-h)+'" width="48" height="'+h+'" rx="6" fill="var(--primary)"/>' +
+               '<text x="'+(x+24)+'" y="172" text-anchor="middle" font-size="12" fill="var(--ink-muted)">'+s.label+'</text>' +
+               '<text x="'+(x+24)+'" y="'+(144-h)+'" text-anchor="middle" font-size="12" fill="var(--ink)">'+s.value+'</text>';
+      }).join('');
+      document.getElementById('tickets').innerHTML = t.tickets.map(x =>
+        '<tr style="border-top:1px solid var(--border);"><td style="padding:10px 8px;">'+esc(x.customer)+'</td><td>'+esc(x.subject)+'</td><td>'+esc(x.channel)+'</td><td><span class="badge-pill '+(x.status==='Resolved'?'green':x.status==='Urgent'?'red':'gray')+'">'+esc(x.status)+'</span></td></tr>').join('');
+    } catch (err) {
+      if (/token|authorized|exist/i.test(err.message)) { localStorage.removeItem('fw_token'); localStorage.removeItem('fw_user'); window.location.href = 'login.html'; return; }
+      box.className = 'form-msg error'; box.textContent = err.message;
+    }
+  })();
+</script>
+</body>
+</html>
